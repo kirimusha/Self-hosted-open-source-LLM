@@ -1,0 +1,35 @@
+/opt/wbs-system/
+├── docker-compose.yml              # Поднимает PostgreSQL + Backend + LLM
+├── .env                            # Переменные окружения (пароли, пути)
+│
+├── backend/                        # FastAPI приложение
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   ├── main.py                     # Точка входа
+│   ├── database.py                 # Подключение к PostgreSQL
+│   ├── models.py                   # SQLAlchemy модели
+│   ├── crud.py                     # Операции с БД
+│   ├── rag_module.py               # Ваш RAG (ML-инженер)
+│   └── llm_client.py               # Вызов LLM сервера
+│
+├── postgres/                       # Данные PostgreSQL (монтируются)
+│   └── data/                       # Папка с файлами БД (создаётся автоматически)
+│
+├── models/                         # LLM веса (только для чтения)
+│   └── llama-3-8b.Q4_K_M.gguf
+│
+├── chroma_db/                      # Векторная БД
+│   └── (файлы Chroma)
+│
+├── knowledge_base/                 # Исходные документы (админ загружает)
+│   ├── gosts/
+│   │   └── gost_r_12345.pdf
+│   └── examples/
+│       └── project_example.txt
+│
+├── backups/                        # Бэкапы PostgreSQL
+│   └── backup_20260401.sql
+│
+└── scripts/                        # Утилиты
+    ├── backup_db.sh
+    └── restore_db.sh
