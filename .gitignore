@@ -1,0 +1,48 @@
+# Виртуальное окружение
+venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+
+# Логи и базы данных
+*.log
+*.db
+*.sqlite
+
+# Данные PostgreSQL (локальные)
+postgres/
+chroma_db/
+
+# Загруженные документы
+knowledge_base/uploads/
+*.pdf
+*.docx
+
+# Файлы окружения
+.env
+.env.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# Docker (если нужно игнорировать volume данные)
+*.pid
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Hugging Face кэш (тяжёлый, можно не коммитить)
+.cache/
+
+# Модели LLM (большие файлы)
+*.gguf
+*.bin
+*.safetensors
