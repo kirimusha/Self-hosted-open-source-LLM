@@ -1,0 +1,67 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: wbs_postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-wbs_admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme123}
+      POSTGRES_DB: ${DB_NAME:-wbs_database}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+      - ./backups:/backups
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-wbs_admin}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - wbs_network
+
+  backend:
+    build: ./backend
+    container_name: wbs_backend
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-wbs_admin}:${DB_PASSWORD:-changeme123}@postgres:5432/${DB_NAME:-wbs_database}
+      LLM_URL: http://llm_server:8080/completion
+      CHROMA_PATH: /chroma_db
+      KNOWLEDGE_BASE_PATH: /knowledge_base
+    volumes:
+      - ./backend:/app
+      - ./chroma_db:/chroma_db
+      - ./knowledge_base:/knowledge_base
+      - ./models:/models
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      llm_server:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - wbs_network
+
+  llm_server:
+    build: ./llm_server
+    container_name: wbs_llm
+    volumes:
+      - ./models:/models
+    environment:
+      - MODEL_PATH=/models/qwen2.5-3b-instruct-q4_K_M.gguf
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 3G
+          cpus: '1.5'
+    networks:
+      - wbs_network
+
+networks:
+  wbs_network:
+    driver: bridge
