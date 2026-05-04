@@ -7,15 +7,16 @@ import json
 
 app = FastAPI()
 
-MODEL_PATH = os.getenv("MODEL_PATH", "/models/qwen2.5-3b-instruct-q4_K_M.gguf")
+MODEL_PATH = os.getenv("MODEL_PATH", "/models/tinyllama.Q4_K_M.gguf")
 
 # Загружаем модель при старте (один раз)
 print(f"Loading model from {MODEL_PATH}...")
 llm = Llama(
     model_path=MODEL_PATH,
-    n_ctx=2048,      # Уменьшаем контекст (было 4096)
-    n_threads=1,     # Одно ядро
-    verbose=False
+    n_ctx=2048,              # уменьшите контекст для экономии памяти
+    n_threads=4,             # количество потоков CPU
+    n_gpu_layers=0,          # 0 = только CPU
+    verbose=True             # включите отладку
 )
 print("Model loaded!")
 
