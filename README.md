@@ -26,14 +26,6 @@ mkdir -p knowledge_base/gosts knowledge_base/examples
 ```bash
 docker-compose up -d
 ```
-
-Шаг 4: Проверить работу
-```bash
-```
-# Проверка здоровья
-```
-curl http://localhost:8000/health
-```
 # Генерация ИСР
 ```
 curl -X POST http://localhost:8000/generate \
